@@ -28,10 +28,10 @@ import type {
   SuperheroImageOnlySuccess,
   SuperheroListRow,
 } from '../models/superhero-api.model';
-import type { CreateLocalHeroInput } from '../models/superhero-list.mappers';
+import { LocalHeroInput } from '../models/superhero-creator.model';
 import {
   listRowFromImageOnly,
-  listRowFromLocalInput,
+  addHeroToList,
 } from '../models/superhero-list.mappers';
 import { HeroesListFilter } from '../models/superheroes-list-filters';
 
@@ -50,7 +50,7 @@ export class Superhero {
   private readonly removedHeroesId = signal<ReadonlySet<string>>(new Set());
   private readonly nextLocalHeroId = signal(MIN_LOCAL_HERO_ID);
   // this id what manages hero duplication
-  private readonly heroCreatorPrefill = signal<CreateLocalHeroInput | null>(null);
+  private readonly heroCreatorPrefill = signal<LocalHeroInput | null>(null);
 
   readonly superheroList = signal<SuperheroListRow[]>([]);
 
@@ -116,13 +116,13 @@ export class Superhero {
       });
   }
 
-  addCreatedHero(input: CreateLocalHeroInput): void {
+  addCreatedHero(input: LocalHeroInput): void {
     const name = input.name.trim();
     if (!name) {
       return;
     }
     const id = String(this.allocateLocalHeroId());
-    const entry = listRowFromLocalInput(id, input);
+    const entry = addHeroToList(id, input);
     this.superheroList.update((list) => [entry, ...list]);
   }
 
@@ -135,11 +135,11 @@ export class Superhero {
     return assigned;
   }
 
-  setHeroCreatorPrefill(input: CreateLocalHeroInput): void {
+  setHeroCreatorPrefill(input: LocalHeroInput): void {
     this.heroCreatorPrefill.set(input);
   }
 
-  consumeHeroCreatorPrefill(): CreateLocalHeroInput | null {
+  consumeHeroCreatorPrefill(): LocalHeroInput | null {
     const v = this.heroCreatorPrefill();
     this.heroCreatorPrefill.set(null);
     return v;

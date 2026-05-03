@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 
 import {
-  createLocalHeroInputFromApiSuccess,
+  createLocalHeroInputsFromApi,
   listRowFromImageOnly,
-  listRowFromLocalInput,
+  addHeroToList,
 } from '../models/superhero-list.mappers';
 
 import { Superhero } from './superhero';
@@ -78,13 +78,13 @@ describe('Superhero', () => {
     expect(service.consumeHeroCreatorPrefill()).toBeNull();
   });
 
-  it('createLocalHeroInputFromApiSuccess supports name override for duplicates', () => {
-    const row = listRowFromLocalInput('3000', {
+  it('createLocalHeroInputsFromApi supports name override for duplicates', () => {
+    const row = addHeroToList('3000', {
       name: 'Original',
       intelligence: '88',
       publisher: 'Pub',
     });
-    const dup = createLocalHeroInputFromApiSuccess(row, {
+    const dup = createLocalHeroInputsFromApi(row, {
       name: 'Copy of Original',
     });
     expect(dup.name).toBe('Copy of Original');
