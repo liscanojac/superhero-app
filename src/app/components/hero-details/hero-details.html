@@ -1,0 +1,213 @@
+<div class="heroes-shell">
+  <header class="heroes-toolbar">
+    <a routerLink="/heroes" class="heroes-back-btn">Back</a>
+    <h1 class="heroes-toolbar-title">
+      @if (loading()) {
+        Hero
+      } @else {
+        {{ hero()?.name ?? 'Hero' }}
+      }
+    </h1>
+    <span class="heroes-toolbar-end" aria-hidden="true"></span>
+  </header>
+
+  <div class="heroes-scroll">
+    <div class="details-body">
+      @if (loading()) {
+        <div class="details-loading" aria-live="polite">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      } @else if (error()) {
+        <p class="details-error">This hero could not be loaded.</p>
+        <a routerLink="/heroes" class="details-retry-link">Return to list</a>
+      } @else if (hero(); as h) {
+        <div class="details-header">
+          <div class="details-photo-shell">
+            @if (shouldShowPhoto()) {
+              <img
+                class="details-photo"
+                [src]="h.image.url"
+                alt=""
+                width="120"
+                height="120"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+                referrerpolicy="no-referrer"
+                (error)="onPhotoError()"
+              />
+            } @else {
+              <div class="details-photo-fallback" aria-hidden="true">
+                {{ nameInitial(h.name) }}
+              </div>
+            }
+          </div>
+        </div>
+
+        <section class="details-section" aria-labelledby="details-overview">
+          <h2 id="details-overview" class="details-section-title">Overview</h2>
+          <dl class="details-grid">
+            <dt>ID</dt>
+            <dd>{{ h.id }}</dd>
+            <dt>Name</dt>
+            <dd>{{ h.name }}</dd>
+            <dt>Response</dt>
+            <dd>{{ h.response }}</dd>
+          </dl>
+        </section>
+
+        <section class="details-section" aria-labelledby="details-powerstats">
+          <h2 id="details-powerstats" class="details-section-title">Powerstats</h2>
+          <dl class="details-grid">
+            <dt>Intelligence</dt>
+            <dd [class]="powerstatClasses(h.powerstats.intelligence)">
+              {{ textString(h.powerstats.intelligence) }}
+            </dd>
+            <dt>Strength</dt>
+            <dd [class]="powerstatClasses(h.powerstats.strength)">
+              {{ textString(h.powerstats.strength) }}
+            </dd>
+            <dt>Speed</dt>
+            <dd [class]="powerstatClasses(h.powerstats.speed)">
+              {{ textString(h.powerstats.speed) }}
+            </dd>
+            <dt>Durability</dt>
+            <dd [class]="powerstatClasses(h.powerstats.durability)">
+              {{ textString(h.powerstats.durability) }}
+            </dd>
+            <dt>Power</dt>
+            <dd [class]="powerstatClasses(h.powerstats.power)">
+              {{ textString(h.powerstats.power) }}
+            </dd>
+            <dt>Combat</dt>
+            <dd [class]="powerstatClasses(h.powerstats.combat)">
+              {{ textString(h.powerstats.combat) }}
+            </dd>
+          </dl>
+        </section>
+
+        <section class="details-section" aria-labelledby="details-bio">
+          <h2 id="details-bio" class="details-section-title">Biography</h2>
+          <dl class="details-grid">
+            <dt>Full name</dt>
+            <dd [class.details-value--empty]="!presentString(h.biography['full-name'])">
+              {{ textString(h.biography['full-name']) }}
+            </dd>
+            <dt>Alter egos</dt>
+            <dd [class.details-value--empty]="!presentString(h.biography['alter-egos'])">
+              {{ textString(h.biography['alter-egos']) }}
+            </dd>
+            <dt>Aliases</dt>
+            <dd [class.details-value--empty]="!presentArray(h.biography.aliases)">
+              {{ textArrayJoined(h.biography.aliases, ', ') }}
+            </dd>
+            <dt>Place of birth</dt>
+            <dd [class.details-value--empty]="!presentString(h.biography['place-of-birth'])">
+              {{ textString(h.biography['place-of-birth']) }}
+            </dd>
+            <dt>First appearance</dt>
+            <dd [class.details-value--empty]="!presentString(h.biography['first-appearance'])">
+              {{ textString(h.biography['first-appearance']) }}
+            </dd>
+            <dt>Publisher</dt>
+            <dd [class.details-value--empty]="!presentString(h.biography.publisher)">
+              {{ textString(h.biography.publisher) }}
+            </dd>
+            <dt>Alignment</dt>
+            <dd [class.details-value--empty]="!presentString(h.biography.alignment)">
+              {{ textString(h.biography.alignment) }}
+            </dd>
+          </dl>
+        </section>
+
+        <section class="details-section" aria-labelledby="details-appearance">
+          <h2 id="details-appearance" class="details-section-title">Appearance</h2>
+          <dl class="details-grid">
+            <dt>Gender</dt>
+            <dd [class.details-value--empty]="!presentString(h.appearance.gender)">
+              {{ textString(h.appearance.gender) }}
+            </dd>
+            <dt>Race</dt>
+            <dd [class.details-value--empty]="!presentString(h.appearance.race)">
+              {{ textString(h.appearance.race) }}
+            </dd>
+            <dt>Height</dt>
+            <dd [class.details-value--empty]="!presentArray(h.appearance.height)">
+              {{ textArrayJoined(h.appearance.height, ' · ') }}
+            </dd>
+            <dt>Weight</dt>
+            <dd [class.details-value--empty]="!presentArray(h.appearance.weight)">
+              {{ textArrayJoined(h.appearance.weight, ' · ') }}
+            </dd>
+            <dt>Eye color</dt>
+            <dd [class.details-value--empty]="!presentString(h.appearance['eye-color'])">
+              {{ textString(h.appearance['eye-color']) }}
+            </dd>
+            <dt>Hair color</dt>
+            <dd [class.details-value--empty]="!presentString(h.appearance['hair-color'])">
+              {{ textString(h.appearance['hair-color']) }}
+            </dd>
+          </dl>
+        </section>
+
+        <section class="details-section" aria-labelledby="details-work">
+          <h2 id="details-work" class="details-section-title">Work</h2>
+          <dl class="details-grid">
+            <dt>Occupation</dt>
+            <dd [class.details-value--empty]="!presentString(h.work.occupation)">
+              {{ textString(h.work.occupation) }}
+            </dd>
+            <dt>Base</dt>
+            <dd [class.details-value--empty]="!presentString(h.work.base)">
+              {{ textString(h.work.base) }}
+            </dd>
+          </dl>
+        </section>
+
+        <section class="details-section" aria-labelledby="details-connections">
+          <h2 id="details-connections" class="details-section-title">Connections</h2>
+          <dl class="details-grid">
+            <dt>Group affiliation</dt>
+            <dd [class.details-value--empty]="!presentString(h.connections['group-affiliation'])">
+              {{ textString(h.connections['group-affiliation']) }}
+            </dd>
+            <dt>Relatives</dt>
+            <dd [class.details-value--empty]="!presentString(h.connections.relatives)">
+              {{ textString(h.connections.relatives) }}
+            </dd>
+          </dl>
+        </section>
+
+        <section class="details-section" aria-labelledby="details-image">
+          <h2 id="details-image" class="details-section-title">Image</h2>
+          <dl class="details-grid">
+            <dt>URL</dt>
+            <dd
+              class="details-url-cell"
+              [class.details-value--empty]="!presentString(h.image.url)"
+            >
+              @if (presentString(h.image.url)) {
+                <a [href]="h.image.url" class="details-link" target="_blank" rel="noopener noreferrer">{{
+                  h.image.url
+                }}</a>
+              } @else {
+                —
+              }
+            </dd>
+          </dl>
+        </section>
+
+        <section class="details-section details-actions" aria-label="Hero actions">
+          <div class="details-actions-row">
+            <button type="button" class="details-btn details-btn--danger" (click)="confirmRemoveHero(h)">
+              Remove hero
+            </button>
+            <button type="button" class="details-btn details-btn--outline" (click)="duplicateHero(h)">
+              Duplicate hero
+            </button>
+          </div>
+        </section>
+      }
+    </div>
+  </div>
+</div>
