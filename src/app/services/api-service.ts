@@ -1,7 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import type { Observable } from 'rxjs';
-import type { SuperheroApiResponse, SuperheroImageOnlyResponse } from '../models/superhero-api.model';
+import type {
+  SuperheroApiResponse,
+  SuperheroApiSuccess,
+  SuperheroImageOnlyResponse,
+  SuperheroSearchResponse,
+  SuperheroSearchSuccess,
+} from '../models/superhero-api.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -44,4 +50,42 @@ export class ApiService {
       `${this.characterUrl(characterId)}/image`,
     );
   }
+
+  searchHeroesByName(name: string): Observable<SuperheroSearchResponse> {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      throw new Error('Search name must be non-empty.');
+    }
+    const key = environment.apiKey?.trim();
+    if (!key) {
+      throw new Error('API key is required for search.');
+    }
+    const base = environment.apiUrl.replace(/\/$/, '');
+    const url = `${base}/${key}/search/${encodeURIComponent(trimmed)}`;
+    return this.http.get<SuperheroSearchResponse>(url);
+  }
+}
+
+export function normalizeSuperheroSearchResults(
+  results: SuperheroSearchSuccess['results'],
+): SuperheroApiSuccess[] {
+  if (results == null) {
+    return [];
+  }
+  const list = Array.isArray(results) ? results : [results];
+  return list.map((row) =>
+    searchHasSuccessResponse(row as SuperheroApiSuccess & { id?: string | number }),
+  );
+}
+
+function searchHasSuccessResponse(
+  row: SuperheroApiSuccess & { id?: string | number },
+): SuperheroApiSuccess {
+  const id = String(row.id ?? '').trim();
+  const withId =
+    id === row.id ? row : ({ ...row, id } as SuperheroApiSuccess);
+  if (withId.response === 'success') {
+    return withId;
+  }
+  return { ...withId, response: 'success' };
 }

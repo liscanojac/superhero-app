@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ApiService } from './api-service';
+import { ApiService, normalizeSuperheroSearchResults } from './api-service';
 import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
@@ -309,4 +309,93 @@ describe('ApiService', () => {
     });
   });
 
+  describe('searchHeroesByName', () => {
+    it('throws when name is empty or whitespace', () => {
+      expect(() => service.searchHeroesByName('')).toThrow(/non-empty/i);
+      expect(() => service.searchHeroesByName('   ')).toThrow(/non-empty/i);
+    });
+
+    it('throws when API key is missing', () => {
+      const env = environment as { apiKey: string };
+      const prev = env.apiKey;
+      env.apiKey = '';
+      try {
+        expect(() => service.searchHeroesByName('bat')).toThrow(/API key is required/i);
+      } finally {
+        env.apiKey = prev;
+      }
+    });
+
+    it('GETs {apiUrl}/{apiKey}/search/{encodedName}', async () => {
+      const env = environment as { apiKey: string; apiUrl: string };
+      const prev = { apiKey: env.apiKey, apiUrl: env.apiUrl };
+      env.apiKey = 'test-token-99';
+      env.apiUrl = 'https://www.superheroapi.com/api.php';
+      try {
+        const responsePromise = firstValueFrom(service.searchHeroesByName('Bat man'));
+        const req = httpMock.expectOne(
+          'https://www.superheroapi.com/api.php/test-token-99/search/Bat%20man',
+        );
+        expect(req.request.method).toBe('GET');
+        req.flush({ response: 'error', error: 'bad' });
+        await expect(responsePromise).resolves.toEqual({
+          response: 'error',
+          error: 'bad',
+        });
+      } finally {
+        env.apiKey = prev.apiKey;
+        env.apiUrl = prev.apiUrl;
+      }
+    });
+
+    it('GETs search under same relative apiUrl as dev proxy', async () => {
+      const env = environment as { apiKey: string; apiUrl: string };
+      const prev = { apiKey: env.apiKey, apiUrl: env.apiUrl };
+      env.apiKey = 'test-token-99';
+      env.apiUrl = '/superheroapi/api.php';
+      try {
+        const responsePromise = firstValueFrom(service.searchHeroesByName('man'));
+        const req = httpMock.expectOne(
+          '/superheroapi/api.php/test-token-99/search/man',
+        );
+        expect(req.request.method).toBe('GET');
+        req.flush({ response: 'success', 'results-for': 'man', results: [] });
+        await expect(responsePromise).resolves.toEqual({
+          response: 'success',
+          'results-for': 'man',
+          results: [],
+        });
+      } finally {
+        env.apiKey = prev.apiKey;
+        env.apiUrl = prev.apiUrl;
+      }
+    });
+  });
+
+  describe('normalizeSuperheroSearchResults', () => {
+    it('returns [] for null or undefined', () => {
+      expect(normalizeSuperheroSearchResults(null)).toEqual([]);
+      expect(normalizeSuperheroSearchResults(undefined)).toEqual([]);
+    });
+
+    it('wraps a single result object in an array', () => {
+      const one = {
+        response: 'success',
+        id: '1',
+        name: 'A',
+      } as import('../models/superhero-api.model').SuperheroApiSuccess;
+      expect(normalizeSuperheroSearchResults(one)).toEqual([one]);
+    });
+
+    it('adds response success to search hits that omit it', () => {
+      const rows = [
+        { id: '1', name: 'A' },
+        { id: '2', name: 'B' },
+      ] as import('../models/superhero-api.model').SuperheroApiSuccess[];
+      expect(normalizeSuperheroSearchResults(rows)).toEqual([
+        { id: '1', name: 'A', response: 'success' },
+        { id: '2', name: 'B', response: 'success' },
+      ]);
+    });
+  });
 });
