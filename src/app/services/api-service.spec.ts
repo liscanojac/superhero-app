@@ -119,14 +119,14 @@ describe('ApiService', () => {
 
     describe('nice-to-have / edge cases', () => {
       it('rejects Unicode digits that look like ASCII (fullwidth)', () => {
-        expect(isNumericId('０')).toBe(false); // U+FF10
-        expect(isNumericId('１')).toBe(false); // U+FF11
+        expect(isNumericId('０')).toBe(false);
+        expect(isNumericId('１')).toBe(false);
         expect(isNumericId('１２３')).toBe(false);
       });
 
       it('rejects invisible or format characters', () => {
-        expect(isNumericId('1\u200b2')).toBe(false); // zero-width space
-        expect(isNumericId('\ufeff1')).toBe(false); // BOM
+        expect(isNumericId('1\u200b2')).toBe(false);
+        expect(isNumericId('\ufeff1')).toBe(false);
       });
 
       it('rejects common non-id tokens', () => {
