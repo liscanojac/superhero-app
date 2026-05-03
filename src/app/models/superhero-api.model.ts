@@ -53,12 +53,24 @@ export type SuperheroApiSuccess = {
   image: SuperheroImageApi;
 };
 
+export type SuperheroListRow = SuperheroApiSuccess & {
+  created: boolean;
+};
+
 export type SuperheroApiError = {
   response: 'error';
   error: string;
 };
 
 export type SuperheroApiResponse = SuperheroApiSuccess | SuperheroApiError;
+
+export type SuperheroSearchSuccess = {
+  response: 'success';
+  'results-for': string;
+  results: SuperheroApiSuccess | SuperheroApiSuccess[] | null | undefined;
+};
+
+export type SuperheroSearchResponse = SuperheroSearchSuccess | SuperheroApiError;
 
 export type SuperheroImageOnlySuccess = {
   response: 'success';
