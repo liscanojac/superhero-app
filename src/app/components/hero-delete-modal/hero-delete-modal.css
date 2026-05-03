@@ -1,0 +1,38 @@
+.hero-delete-modal-message {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+mat-dialog-actions {
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.hero-delete-modal-btn {
+  cursor: pointer;
+  border-radius: var(--mat-sys-corner-full);
+  padding: 0.5rem 1rem;
+  font: var(--mat-sys-label-large);
+}
+
+.hero-delete-modal-btn-cancel {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--mat-sys-primary);
+}
+
+.hero-delete-modal-btn-cancel:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+}
+
+.hero-delete-modal-btn-remove {
+  border: 1px solid var(--mat-sys-error);
+  background-color: transparent;
+  color: var(--mat-sys-error);
+}
+
+.hero-delete-modal-btn-remove:hover {
+  background-color: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
