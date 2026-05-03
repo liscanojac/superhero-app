@@ -1,0 +1,60 @@
+<div class="heroes-shell">
+  <header class="heroes-toolbar">
+    <a routerLink="/" class="heroes-title">Heroes</a>
+    <a routerLink="/heroes/create" class="heroes-create-btn">Create</a>
+  </header>
+
+  <div
+    #heroesScroll
+    class="heroes-scroll"
+    role="feed"
+    [attr.aria-busy]="
+      superheroService.isLoadingBatch() || superheroService.apiSearchLoading() ? true : null
+    "
+    (scroll)="onScroll($event)"
+  >
+    <div class="heroes-filter-bar">
+      <app-search-bar class="heroes-search" [(query)]="searchQuery" />
+      <mat-button-toggle-group
+        class="heroes-source-toggle"
+        aria-label="Which heroes to show in the list"
+        [value]="superheroService.listFilter()"
+        (change)="onSourceFilterChange($event)"
+        hideSingleSelectionIndicator
+      >
+        <mat-button-toggle value="all">All</mat-button-toggle>
+        <mat-button-toggle value="created">Created</mat-button-toggle>
+        <mat-button-toggle value="api">API</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="heroes-cards">
+      @if (listAppearsEmpty()) {
+        <mat-card class="heroes-empty-card" appearance="outlined">
+          <mat-card-content class="heroes-empty-card-body">
+            <p class="heroes-empty-text">{{ emptyListMessage() }}</p>
+            @if (superheroService.listFilter() === 'created') {
+              <a routerLink="/heroes/create" class="heroes-empty-cta">Create a hero</a>
+            }
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        @for (hero of displayedHeroes(); track hero.id) {
+          <app-hero-card [hero]="hero" />
+        }
+      }
+    </div>
+
+    @if (superheroService.apiSearchLoading()) {
+      <div class="heroes-search-loading" aria-live="polite">
+        <mat-spinner diameter="28"></mat-spinner>
+      </div>
+    }
+
+    @if (superheroService.isLoadingBatch()) {
+      <div class="heroes-loading" aria-live="polite">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+    }
+  </div>
+</div>
