@@ -5,6 +5,7 @@ import type {
   SuperheroApiResponse,
   SuperheroApiSuccess,
   SuperheroImageOnlyResponse,
+  SuperheroListRow,
   SuperheroSearchResponse,
   SuperheroSearchSuccess,
 } from '../models/superhero-api.model';
@@ -68,7 +69,7 @@ export class ApiService {
 
 export function normalizeSuperheroSearchResults(
   results: SuperheroSearchSuccess['results'],
-): SuperheroApiSuccess[] {
+): SuperheroListRow[] {
   if (results == null) {
     return [];
   }
@@ -80,12 +81,12 @@ export function normalizeSuperheroSearchResults(
 
 function searchHasSuccessResponse(
   row: SuperheroApiSuccess & { id?: string | number },
-): SuperheroApiSuccess {
+): SuperheroListRow {
   const id = String(row.id ?? '').trim();
   const withId =
     id === row.id ? row : ({ ...row, id } as SuperheroApiSuccess);
   if (withId.response === 'success') {
-    return withId;
+    return { ...withId, created: false };
   }
-  return { ...withId, response: 'success' };
+  return { ...withId, response: 'success', created: false };
 }

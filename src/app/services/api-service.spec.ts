@@ -384,7 +384,9 @@ describe('ApiService', () => {
         id: '1',
         name: 'A',
       } as import('../models/superhero-api.model').SuperheroApiSuccess;
-      expect(normalizeSuperheroSearchResults(one)).toEqual([one]);
+      expect(normalizeSuperheroSearchResults(one)).toEqual([
+        { ...one, created: false },
+      ]);
     });
 
     it('adds response success to search hits that omit it', () => {
@@ -393,8 +395,8 @@ describe('ApiService', () => {
         { id: '2', name: 'B' },
       ] as import('../models/superhero-api.model').SuperheroApiSuccess[];
       expect(normalizeSuperheroSearchResults(rows)).toEqual([
-        { id: '1', name: 'A', response: 'success' },
-        { id: '2', name: 'B', response: 'success' },
+        { id: '1', name: 'A', response: 'success', created: false },
+        { id: '2', name: 'B', response: 'success', created: false },
       ]);
     });
   });
