@@ -33,12 +33,11 @@ import {
   listRowFromImageOnly,
   listRowFromLocalInput,
 } from '../models/superhero-list.mappers';
+import { HeroesListFilter } from '../models/superheroes-list-filters';
 
 const MAX_CHARACTER_ID = 731;
 const BATCH_SIZE = 15;
 const MIN_LOCAL_HERO_ID = 3000;
-
-export type HeroesListFilter = 'all' | 'created' | 'api';
 
 @Injectable({
   providedIn: 'root',
