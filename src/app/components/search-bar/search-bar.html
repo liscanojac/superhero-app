@@ -1,0 +1,29 @@
+<div class="search-bar">
+  <mat-form-field
+    class="search-bar-field"
+    appearance="outline"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>Search heroes</mat-label>
+    <input
+      matInput
+      type="search"
+      autocomplete="off"
+      [value]="searchInput()"
+      (input)="onInput($event)"
+      enterkeyhint="search"
+    />
+    @if (searchInput().length > 0) {
+      <button
+        matIconButton
+        matSuffix
+        type="button"
+        class="search-bar-clear"
+        aria-label="Clear search"
+        (click)="clear()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</div>

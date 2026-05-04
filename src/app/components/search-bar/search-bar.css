@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.search-bar {
+  width: 100%;
+}
+
+.search-bar-field {
+  width: 100%;
+}
+
+.search-bar-clear {
+  margin-right: -0.25rem;
+}
