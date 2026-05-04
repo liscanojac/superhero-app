@@ -1,0 +1,27 @@
+<div
+  class="input-text"
+  [class.input-text--invalid]="showError()"
+  [class.input-text--disabled]="disabled"
+>
+  <div class="input-text-box">
+    <label class="input-text-label" [attr.for]="resolvedId()">{{ label() }}</label>
+    <input
+      class="input-text-control"
+      [id]="resolvedId()"
+      [type]="type()"
+      [value]="value"
+      [disabled]="disabled"
+      [attr.autocomplete]="autocomplete()"
+      [attr.inputmode]="type() === 'number' ? 'numeric' : null"
+      [attr.min]="min() ?? null"
+      [attr.max]="max() ?? null"
+      [attr.step]="step() ?? null"
+      (keydown)="onKeyDown($event)"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+  @if (showError()) {
+    <span class="input-text-error" role="alert">{{ errorText() }}</span>
+  }
+</div>
