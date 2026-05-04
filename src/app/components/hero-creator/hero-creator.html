@@ -1,0 +1,199 @@
+<div class="heroes-shell">
+  <header class="heroes-toolbar">
+    <a routerLink="/heroes" class="heroes-back-btn">Back</a>
+    <h1 class="heroes-toolbar-title">Create hero</h1>
+    <button
+      type="submit"
+      form="hero-creator-form"
+      class="heroes-create-btn"
+      [disabled]="form.invalid"
+    >
+      Save
+    </button>
+  </header>
+
+  <div class="heroes-scroll">
+    <div class="creator-body">
+      <p class="creator-lead">Only name is required; everything else is optional.</p>
+      <form
+        id="hero-creator-form"
+        class="creator-form"
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+      >
+        <h2 class="creator-section">Basics</h2>
+        <div class="creator-row">
+          <app-input-text
+            class="creator-field"
+            formControlName="name"
+            label="Name"
+            [errorMessages]="nameErrorMessages"
+          />
+          <app-input-text
+            class="creator-field"
+            formControlName="imageUrl"
+            label="Image URL"
+            type="url"
+          />
+        </div>
+
+        <h2 class="creator-section">Biography</h2>
+        <div class="creator-row">
+          <app-input-text
+            class="creator-field"
+            formControlName="fullName"
+            label="Full name"
+          />
+          <app-input-text
+            class="creator-field"
+            formControlName="alterEgos"
+            label="Alter egos"
+          />
+        </div>
+        <app-input-text
+          class="creator-field full"
+          formControlName="aliasesCsv"
+          label="Aliases (comma-separated)"
+        />
+        <div class="creator-row">
+          <app-input-text
+            class="creator-field"
+            formControlName="placeOfBirth"
+            label="Place of birth"
+          />
+          <app-input-text
+            class="creator-field"
+            formControlName="firstAppearance"
+            label="First appearance"
+          />
+        </div>
+        <div class="creator-row creator-row--field-pair">
+          <app-input-text
+            class="creator-field"
+            formControlName="publisher"
+            label="Publisher"
+          />
+          <mat-form-field
+            appearance="outline"
+            class="creator-field creator-mat-select"
+            subscriptSizing="dynamic"
+          >
+            <mat-label>Alignment</mat-label>
+            <mat-select formControlName="alignment">
+              <mat-option value="good">Good</mat-option>
+              <mat-option value="bad">Bad</mat-option>
+              <mat-option value="neutral">Neutral</mat-option>
+              <mat-option value="-">Unknown</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <h2 class="creator-section">Powerstats</h2>
+        <div class="creator-grid-stats">
+          <app-input-text
+            formControlName="intelligence"
+            label="Intelligence"
+            type="number"
+            [min]="0"
+            [max]="100"
+            [step]="1"
+            [errorMessages]="statErrorMessages"
+          />
+          <app-input-text
+            formControlName="strength"
+            label="Strength"
+            type="number"
+            [min]="0"
+            [max]="100"
+            [step]="1"
+            [errorMessages]="statErrorMessages"
+          />
+          <app-input-text
+            formControlName="speed"
+            label="Speed"
+            type="number"
+            [min]="0"
+            [max]="100"
+            [step]="1"
+            [errorMessages]="statErrorMessages"
+          />
+          <app-input-text
+            formControlName="durability"
+            label="Durability"
+            type="number"
+            [min]="0"
+            [max]="100"
+            [step]="1"
+            [errorMessages]="statErrorMessages"
+          />
+          <app-input-text
+            formControlName="power"
+            label="Power"
+            type="number"
+            [min]="0"
+            [max]="100"
+            [step]="1"
+            [errorMessages]="statErrorMessages"
+          />
+          <app-input-text
+            formControlName="combat"
+            label="Combat"
+            type="number"
+            [min]="0"
+            [max]="100"
+            [step]="1"
+            [errorMessages]="statErrorMessages"
+          />
+        </div>
+
+        <h2 class="creator-section">Appearance</h2>
+        <div class="creator-row creator-row--field-pair">
+          <mat-form-field
+            appearance="outline"
+            class="creator-field creator-mat-select"
+            subscriptSizing="dynamic"
+          >
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Female">Female</mat-option>
+              <mat-option value="Unknown">Unknown</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <app-input-text class="creator-field" formControlName="race" label="Race" />
+        </div>
+        <div class="creator-row">
+          <app-input-text class="creator-field" formControlName="eyeColor" label="Eye color" />
+          <app-input-text class="creator-field" formControlName="hairColor" label="Hair color" />
+        </div>
+        <p class="creator-hint">Height and weight (imperial / metric).</p>
+        <div class="creator-row">
+          <app-input-text class="creator-field" formControlName="height0" label="Height imperial" />
+          <app-input-text class="creator-field" formControlName="height1" label="Height metric" />
+        </div>
+        <div class="creator-row">
+          <app-input-text class="creator-field" formControlName="weight0" label="Weight imperial" />
+          <app-input-text class="creator-field" formControlName="weight1" label="Weight metric" />
+        </div>
+
+        <h2 class="creator-section">Work</h2>
+        <div class="creator-row">
+          <app-input-text class="creator-field" formControlName="occupation" label="Occupation" />
+          <app-input-text class="creator-field" formControlName="base" label="Base" />
+        </div>
+
+        <h2 class="creator-section">Connections</h2>
+        <mat-form-field appearance="outline" class="creator-field full">
+          <mat-label>Group affiliation</mat-label>
+          <textarea matInput formControlName="groupAffiliation" rows="2"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="creator-field full">
+          <mat-label>Relatives</mat-label>
+          <textarea matInput formControlName="relatives" rows="3"></textarea>
+        </mat-form-field>
+
+        <div class="creator-form-end" aria-hidden="true"></div>
+      </form>
+    </div>
+  </div>
+</div>
