@@ -1,0 +1,120 @@
+:host {
+  display: block;
+}
+
+.hero-card {
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-surface);
+  box-shadow: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.hero-card:hover {
+  box-shadow: var(--mat-sys-level2);
+}
+
+.hero-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.75rem !important;
+}
+
+.hero-card-info-link {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hero-card-info-link:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.hero-card-info {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Clip to a true circle; img fills the box (avoids Tailwind img preflight fighting object-fit). */
+.hero-card-photo-shell {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--mat-sys-surface-container-highest, var(--mat-sys-surface-variant));
+}
+
+.hero-card-photo {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-card-photo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  font: var(--mat-sys-title-medium);
+  font-weight: 500;
+}
+
+.hero-card-name {
+  overflow: hidden;
+  font: var(--mat-sys-title-medium);
+  color: var(--mat-sys-on-surface);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-card-remove {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--mat-sys-error);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: transparent;
+  color: var(--mat-sys-error);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.hero-card-remove:hover {
+  background-color: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.hero-card-remove:focus-visible {
+  outline: 2px solid var(--mat-sys-error);
+  outline-offset: 2px;
+}
+
+.hero-card-remove mat-icon {
+  width: 22px;
+  height: 22px;
+  font-size: 22px;
+}

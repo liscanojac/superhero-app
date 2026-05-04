@@ -1,0 +1,40 @@
+<mat-card class="hero-card" appearance="outlined">
+  <mat-card-content class="hero-card-body">
+    <a class="hero-card-info-link" [routerLink]="['/heroes', hero().id]">
+      <div class="hero-card-info">
+        @if (shouldShowPhoto()) {
+          <div class="hero-card-photo-shell">
+            <img
+              class="hero-card-photo"
+              [src]="hero().image.url"
+              alt=""
+              width="48"
+              height="48"
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              (error)="onPhotoError()"
+            />
+          </div>
+        } @else {
+          <div
+            class="hero-card-photo-shell hero-card-photo-fallback"
+            aria-hidden="true"
+          >
+            {{ nameInitial(hero().name) }}
+          </div>
+        }
+        <span class="hero-card-name">{{ hero().name }}</span>
+      </div>
+    </a>
+
+    <button
+      type="button"
+      class="hero-card-remove"
+      aria-label="Remove from list"
+      (click)="$event.stopPropagation(); confirmRemove()"
+    >
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>
