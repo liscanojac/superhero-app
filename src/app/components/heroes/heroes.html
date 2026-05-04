@@ -14,7 +14,7 @@
     (scroll)="onScroll($event)"
   >
     <div class="heroes-filter-bar">
-      <app-search-bar class="heroes-search" [(query)]="searchQuery" />
+      <app-search-bar class="heroes-search" [(searchInput)]="searchQuery" />
       <mat-button-toggle-group
         class="heroes-source-toggle"
         aria-label="Which heroes to show in the list"
