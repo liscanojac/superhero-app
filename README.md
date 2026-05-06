@@ -1,59 +1,93 @@
-# SuperheroApp
+# Superhero App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
+Single-page application (SPA) built with **Angular** for browsing and managing superhero data. The UI combines **in-memory state** (created heroes) with the public **Superhero API** for discovery and details.
+
+**Tooling:** Angular CLI **21.2.9** · TypeScript **~5.9** · RxJS **~7.8** · Vitest (unit tests) · Angular Material & Tailwind CSS.
+
+> **Version policy:** This repo pins dependencies compatible with **Angular 21.x**. Before submission, confirm the [Angular support schedule](https://angular.dev/reference/releases) and upgrade to the **current LTS** line if your institution requires it.
+
+## Features
+
+Legend: **Done** · **Partial** · **N/A / optional**
+
+### Services (state + API)
+
+| Requirement | Status | Notes |
+|-------------|--------|--------|
+| Register a new superhero | **Done** | `Superhero.addCreatedHero()` + `HeroCreator` form with validations |
+| List all superheroes | **Done** | Unified list in `Superhero.superheroList()`; API thumbnails loaded in batches |
+| Get one superhero by id | **Done** | Details route loads from list (created) or `ApiService.getCharacterById()` |
+| Search by name (parameter) | **Done** | Local name filter + debounced API search (`nameSearch` / `ApiService.searchHeroesByName`) when API key is set |
+| Modify a superhero | **Partial** | No separate “edit in place” screen. **Duplicate hero** pre-fills the creator with mapped data so you can save a new copy (edit-by-duplicate workflow) |
+| Delete a superhero | **Done** | `deleteHero()` + confirmation modal (`HeroDeleteModal`) |
+| Unit tests for the service | **Done** | `superhero.spec.ts`, `api-service.spec.ts`, `superhero-list.mappers.spec.ts` |
+
+**Storage note:** Created heroes and list composition live in the **`Superhero` injectable** (signals). **No custom backend** is required; optional HTTP calls go to the **Superhero API** for remote characters and search.
+
+### UI component(s) — list & CRUD-style flows
+
+| Requirement | Status | Notes |
+|-------------|--------|--------|
+| Paginated list with add / edit / delete actions | **Partial** | **Progressive loading** (batched thumbnails + infinite scroll) instead of classic page-number pagination. **Add** and **remove** on cards; **details** + **duplicate** instead of a dedicated “edit” button |
+| Filter input above the list | **Done** | `SearchBar` + filter toggles (all / created / API) on `Heroes` |
+| Add → empty form → validations → return to list | **Done** | `/heroes/create` (`HeroCreator`) |
+| Edit → form with selected hero → save → list | **Partial** | Use **Duplicate hero** on the details page to open the creator with data; there is no route that updates the same id in place |
+| Delete → confirm → remove | **Done** | Modal confirmation then `deleteHero()` |
+| Unit tests for the component | **Done** | Specs under `src/app/components/**.spec.ts` (e.g. `heroes`, `hero-creator`, `hero-delete-modal`, …) |
+
+
+### Positive criteria (high level)
+
+- **Data model:** Typed API shapes (`superhero-api.model`), creator input (`superhero-creator.model`), and mappers (`superhero-list.mappers`).
+- **Reactive style:** `combineLatest`, `switchMap`, `forkJoin`, `toObservable`, signals/computed in components.
+- **Readable code:** Small helpers and lambdas where they clarify intent.
 
 ## Development server
 
-To start a local development server, run:
-
 ```bash
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200/`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Build
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Artifacts go to `dist/` (production build applies environment replacements as configured).
 
-## Running unit tests
+## Deployment (Firebase Hosting)
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+**Live app:** [https://superhero-app-cc9c0.web.app/](https://superhero-app-cc9c0.web.app/)
+
+The static site is hosted on **Firebase Hosting** (project `superhero-app-cc9c0`). Production builds do **not** store API keys or other secrets in the repository:
+
+- The Superhero API key and Firebase service account are provided as **GitHub Actions secrets** (e.g. `SUPERHERO_API_KEY`, `FIREBASE_SERVICE_ACCOUNT_*`) and are only available in the CI environment.
+- At deploy time, `scripts/write-environment.mjs` writes `environment.generated.ts` from those values so the production bundle is built without committing secrets to Git.
+
+## Unit tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Coverage summary (non-watch):
 
 ```bash
-ng e2e
+npm run test:coverage
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+**Coverage:** With the default Vitest **v8** report, **statement** and **line** coverage are **above 80%** ( ~83% statements, ~81% lines on a full run).
+run `npm run test:coverage` locally for the current numbers.
 
-## Additional Resources
+## Repository & delivery
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Submit this **Git repository** URL as instructed. Prefer **clear, scoped commits** (feature vs. chore vs. test).
+
+## Additional resources
+
+- [Angular CLI documentation](https://angular.dev/tools/cli)
+- [Angular testing](https://angular.dev/guide/testing)
